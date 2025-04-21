@@ -82,7 +82,7 @@ export async function POST(req) {
       }
     } catch (error) {
       console.log('Error creating or updating user:', error);
-      return new Response('Error occured', {
+      return new Response('Error occurred', {
         status: 400,
       });
     }
@@ -94,7 +94,7 @@ export async function POST(req) {
       await deleteUser(id);
     } catch (error) {
       console.log('Error deleting user:', error);
-      return new Response('Error occured', {
+      return new Response('Error occurred', {
         status: 400,
       });
     }
