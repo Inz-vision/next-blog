@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.16.0",
+    "@clerk/nextjs": "^5.7.5",
     "@clerk/themes": "^2.2.34",
     "autoprefixer": "^10.4.21",
     "firebase": "^11.6.0",
