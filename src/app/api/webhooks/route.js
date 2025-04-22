@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { createOrUpdateUser, deleteUser } from '@/lib/actions/user';
 import { clerkClient } from '@clerk/nextjs/server';
 
-export async function POST(req) {
+export default async function POST(req) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
@@ -19,8 +19,6 @@ export async function POST(req) {
   const svix_timestamp = headerPayload.get('svix-timestamp');
   const svix_signature = headerPayload.get('svix-signature');
 
-  console.log(headerPayload.get('Content-Security-Policy'));
-  res.status(200).json({ message: 'Success' });
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
@@ -103,5 +101,6 @@ export async function POST(req) {
     }
   }
 
-  return new Response('', { status: 200 });
+  console.log(headerPayload.get('Content-Security-Policy'));
+  return new Response(JSON.stringify({ message: 'Success' }), { status: 200 });
 }
