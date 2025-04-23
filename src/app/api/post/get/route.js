@@ -3,6 +3,8 @@ import { connect } from '../../../../lib/mongodb/mongoose.js';
 
 export const POST = async (req) => {
   try {
+    console.log('Request Headers:', req.headers); // Log headers for debugging
+    
     // Connect to MongoDB
     await connect();
 
