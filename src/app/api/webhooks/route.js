@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { createOrUpdateUser, deleteUser } from '@/lib/actions/user';
 import { clerkClient } from '@clerk/nextjs/server';
 
-export default async function POST(req) {
+export async function POST(req) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
@@ -59,7 +59,7 @@ export default async function POST(req) {
 
   if (eventType === 'user.created' || eventType === 'user.updated') {
     const { id, first_name, last_name, image_url, email_addresses, username } =
-      evt?.data;
+      evt?.data;            
     try {
       const user = await createOrUpdateUser(
         id,
@@ -77,9 +77,14 @@ export default async function POST(req) {
               isAdmin: user.isAdmin,
             },
           });
+          console.log('updateUserMetadata executed successfully:', {
+            userMongoId: user._id,
+            isAdmin: user.isAdmin,
+          });
+          console.log('Webhook event data:', evt?.data);
         } catch (error) {
           console.log('Error updating user metadata:', error);
-        }
+        }        
       }
     } catch (error) {
       console.log('Error creating or updating user:', error);
@@ -101,6 +106,6 @@ export default async function POST(req) {
     }
   }
 
-  console.log(headerPayload.get('Content-Security-Policy'));
+  console.log(headerPayload.get('Content-Security-Policy'));  
   return new Response(JSON.stringify({ message: 'Success' }), { status: 200 });
 }
