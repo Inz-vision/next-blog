@@ -5,6 +5,11 @@ const isProtectedRoute = createRouteMatcher(['/dashboard(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
+  console.log('Authenticated userId:', userId);
+
+    // Log request details for debugging
+    console.log('Request URL:', req.url);
+    console.log('Request Headers:', Object.fromEntries(req.headers.entries())); // Log headers as an object
 
   // Redirect unauthenticated users to the sign-in page
   if (!userId && isProtectedRoute(req)) {
