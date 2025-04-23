@@ -1,29 +1,33 @@
-export const fetchPosts = async (startIndex = 0, limit = 10, order = 'desc') => {
+const fetchPosts = async () => {
+    setLoading(true);
     try {
-      const response = await fetch('/api/post/get', {
+      const res = await fetch('/api/post/get', {
         method: 'POST',
-        credentials: 'include', // Ensures cookies are sent with the request
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ startIndex, limit, order }),
+        body: JSON.stringify({
+          limit: 9,
+          order: sortFromUrl,
+          category: categoryFromUrl,
+          searchTerm: searchTermFromUrl,
+        }),
       });
   
-      // Check if the response is a redirect
-      if (response.redirected) {
-        throw new Error('Redirected to sign-in. Please log in.');
+      if (!res.ok) {
+        console.error('Failed to fetch posts:', res.statusText);
+        setLoading(false);
+        return;
       }
   
-      // Check if the response is OK
-      if (!response.ok) {
-        throw new Error(`Failed to fetch posts: ${response.statusText}`);
-      }
-  
-      // Parse the JSON response
-      const data = await response.json();
-      return data;
+      const data = await res.json();
+      console.log('Fetched posts:', data); // Log the response for debugging
+      setPosts(data.posts || []); // Ensure posts is always an array
+      setShowMore(data.posts?.length === 9);
     } catch (error) {
       console.error('Error fetching posts:', error);
-      throw error; // Re-throw the error so the caller can handle it
+      setPosts([]); // Reset posts to an empty array on error
+    } finally {
+      setLoading(false);
     }
   };

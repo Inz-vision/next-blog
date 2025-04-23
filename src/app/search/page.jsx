@@ -3,6 +3,7 @@
 import { Button, Select, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { fetchPosts } from '@/lib/actions/posts';
 import PostCard from '../components/PostCard';
 
 export default function Search() {
@@ -30,33 +31,24 @@ export default function Search() {
       category: categoryFromUrl,
     });
 
-    const fetchPosts = async () => {
+    const fetchSearchResults = async () => {
       setLoading(true);
-      const res = await fetch('/api/post/get', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          limit: 9,
-          order: sortFromUrl,
-          category: categoryFromUrl,
-          searchTerm: searchTermFromUrl,
-        }),
-      });
-
-      if (!res.ok) {
+      try {
+        const data = await fetchPosts(0, 9, sidebarData.sort, {
+          category: sidebarData.category,
+          searchTerm: sidebarData.searchTerm,
+        });
+        setPosts(data.posts || []);
+        setShowMore(data.posts?.length === 9);
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+        setPosts([]);
+      } finally {
         setLoading(false);
-        return;
       }
-
-      const data = await res.json();
-      setPosts(data.posts);
-      setLoading(false);
-      setShowMore(data.posts.length === 9);
     };
-
-    fetchPosts();
+  
+    fetchSearchResults();
   }, [searchParams]);
 
   const handleChange = (e) => {

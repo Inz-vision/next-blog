@@ -1,5 +1,11 @@
 import Link from 'next/link';
 export default function PostCard({ post }) {
+
+  if (!post || !post._id) {
+    console.error('Invalid post data:', post);
+    return null; // Render nothing if the post is invalid
+  }
+  
   return (
     <div className='group relative w-full border border-teal-500 hover:border-2 h-[400px] overflow-hidden rounded-lg sm:w-[430px] transition-all'>
       <Link href={`/post/${post.slug}`}>
