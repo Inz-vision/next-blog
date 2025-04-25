@@ -2,7 +2,8 @@ import PostCard from './PostCard';
 export default async function RecentPosts({limit}) {
   let posts = null;
   try {
-    const result = await fetch(process.env.URL + '/api/post/get', {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // Use absolute URL
+    const result = await fetch(`${baseUrl}/api/post/get`, {
       method: 'POST',
       body: JSON.stringify({ limit: limit, order: 'desc' }),
       cache: 'no-store',

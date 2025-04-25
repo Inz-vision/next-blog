@@ -72,7 +72,8 @@ export default function CreatePostPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/post/create', {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // Use absolute URL
+      const res = await fetch(`${baseUrl}/api/post/create`, {            
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -20,7 +20,7 @@ export default function DashboardComp() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch('/api/user/get', {
+        const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/user/get', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -42,7 +42,8 @@ export default function DashboardComp() {
     };
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/post/get', {
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // Use absolute URL
+        const res = await fetch(`${baseUrl}/api/post/get`, {        
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

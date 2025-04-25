@@ -32,10 +32,10 @@ export default function UpdatePost() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch('/api/post/get', {
+        const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/post/get', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json',s
           },
           body: JSON.stringify({
             postId: postId,
@@ -95,7 +95,8 @@ export default function UpdatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/post/update', {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // Use absolute URL
+      const res = await fetch(`${baseUrl}/api/post/update`, {            
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
