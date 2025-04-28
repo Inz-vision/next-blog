@@ -30,8 +30,9 @@ export default function UpdatePost() {
   const router = useRouter();
   const pathname = usePathname();
   const postId = pathname.split('/').pop();
-  useEffect(() => {
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {   
     const fetchPost = async () => {
       setLoading(true);
       try {
@@ -48,7 +49,7 @@ export default function UpdatePost() {
         const data = await res.json();
         console.log('API Response:', data);
         if (res.ok) {
-          setFormData(data.post || data.posts[0]);
+          setFormData(data?.data?.post || data?.data?.posts[0]);
         }
       } catch (error) {
         console.error('Error fetching post:', error);
@@ -124,7 +125,7 @@ export default function UpdatePost() {
       const data = await res.json();
       console.log('Update Response:', data);
       if (!res.ok) {
-        setPublishError(data.message || 'Failed to update the post');
+        setPublishError(data?.data?.message || 'Failed to update the post');
         return;
       }
       setPublishError(null);
@@ -136,7 +137,9 @@ export default function UpdatePost() {
   };
 
   if (!isLoaded || loading) {
-    return <p>Loading...</p>;
+    
+    // Handle loading state however you like
+    return null;
   }
 
   if (!isSignedIn || !user?.publicMetadata?.isAdmin) {

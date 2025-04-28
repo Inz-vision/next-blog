@@ -2,14 +2,22 @@ import Post from '../../../../lib/models/post.model';
 import { connect } from '../../../../lib/mongodb/mongoose';
 import { currentUser } from '@clerk/nextjs/server';
 
-export const DELETE = async (req) => {
-  const user = await currentUser();
-  try {
+export const DELETE = async (req) => {  
+  try { 
+  const headers = req.headers; // No need to await
+  const user = await currentUser({ headers });
+
+  if (!user) {
+    return new Response('Unauthorized: No user found', { status: 401 });
+  }
+
+  
     await connect();
-    const data = await req?.json();
+    const data = await req.json();
+
     if (
-      !user.publicMetadata.isAdmin ||
-      user.publicMetadata.userMongoId !== data.userId
+      !user.publicMetadata?.isAdmin ||
+      user.publicMetadata?.userMongoId !== data.userId
     ) {
       return new Response('Unauthorized', { status: 401 });
     }

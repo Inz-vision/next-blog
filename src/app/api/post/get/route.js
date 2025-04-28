@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Post from '../../../../lib/models/post.model.js';
 import { connect } from '../../../../lib/mongodb/mongoose.js';
 

@@ -3,10 +3,12 @@
 import { Button, Modal, Table } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import Link from 'next/link';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 export default function DashPosts() {
+  const router = useRouter(); // Initialize useRouter
   const { user } = useUser();
   console.log('user', user);
 
@@ -31,7 +33,7 @@ export default function DashPosts() {
         console.log(data);
 
         if (res.ok) {
-          setUserPosts(data.posts);
+          setUserPosts(data?.data?.posts);         
         }
       } catch (error) {
         console.log(error.message);
@@ -45,10 +47,12 @@ export default function DashPosts() {
   const handleDeletePost = async () => {
     setShowModal(false);
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/post/delete', {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // Use absolute URL
+      const res = await fetch(`${baseUrl}/api/post/delete`, {           
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json', 
+          Authorization: `Bearer ${user?.sessionId}`,              
         },
         body: JSON.stringify({
           postId: postIdToDelete,
@@ -57,13 +61,14 @@ export default function DashPosts() {
       });
       const data = await res.json();
       if (res.ok) {
-        const newPosts = userPosts.filter(
+        const newPosts = userPosts?.filter(
           (post) => post._id !== postIdToDelete
         );
         setUserPosts(newPosts);
-        setPostIdToDelete(''); // Reset postIdToDelete after deletion
+        setPostIdToDelete(''); // Reset postIdToDelete after deletion  
+        router.push('/dashboard'); // Refresh the page to reflect changes     
       } else {
-        console.log(data.message);
+        console.log(data?.data?.message);
       }
     } catch (error) {
       console.log(error.message);
@@ -80,7 +85,7 @@ export default function DashPosts() {
 
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {user?.publicMetadata?.isAdmin && userPosts.length > 0 ? (
+      {user?.publicMetadata?.isAdmin && userPosts?.length > 0 ? (
         <>
           <Table hoverable className='shadow-md'>
             <Table.Head>
@@ -143,7 +148,14 @@ export default function DashPosts() {
           </Table>
         </>
       ) : (
-        <p>You have no posts yet!</p>
+        <div>
+          <p>You have no posts yet!</p>  
+          <div className='flex justify-center items-center h-full w-full py-7'>
+            <Link href='/dashboard/create-post'>
+              <Button gradientDuoTone='purpleToPink'>Create a post</Button>
+            </Link>   
+          </div>   
+        </div>
       )}
       <Modal
         show={showModal}

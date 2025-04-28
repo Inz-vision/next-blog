@@ -56,7 +56,7 @@ export const POST = async (req) => {
     });
 
     console.log('New Post:', newPost);
-    console.log('Authenticated User:', userId);
+    console.log('Authenticated User:', user);
 
     return new Response(JSON.stringify(newPost), { status: 200 });
   } catch (error) {

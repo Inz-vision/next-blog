@@ -54,9 +54,9 @@ export default function DashboardComp() {
         });
         const data = await res.json();
         if (res.ok) {
-          setPosts(data.posts);
-          setTotalPosts(data.totalPosts);
-          setLastMonthPosts(data.lastMonthPosts);
+          setPosts(data?.data?.posts);
+          setTotalPosts(data?.data?.totalPosts);
+          setLastMonthPosts(data?.data?.lastMonthPosts);
         }
       } catch (error) {
         console.log(error.message);
@@ -150,7 +150,7 @@ export default function DashboardComp() {
               <Table.HeadCell>Category</Table.HeadCell>
             </Table.Head>
             {posts &&
-              posts.map((post) => (
+              posts?.map((post) => (
                 <Table.Body key={post._id} className='divide-y'>
                   <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                     <Table.Cell>

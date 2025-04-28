@@ -43,10 +43,10 @@ export default async function Home() {
           View all posts
         </Link>
         <Link
-          href='/dashboard/create-post'
+          href='/dashboard'
           className='text-xs sm:text-sm text-teal-500 font-bold hover:underline'
         >
-          Create post
+          Dashboard
         </Link>
       </div>
       <div className='p-3 bg-amber-100 dark:bg-slate-700'>

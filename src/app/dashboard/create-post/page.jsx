@@ -93,7 +93,7 @@ export default function CreatePostPage() {
       console.log('API Response:', data); // Debugging log
       if (!res.ok) {
         console.error('Error creating post:', data);
-        setPublishError(data.error || 'Failed to create post');
+        setPublishError(data?.data?.error || 'Failed to create post');
         return;
       }
       if (!data.slug) {
