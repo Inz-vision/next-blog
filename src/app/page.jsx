@@ -8,6 +8,9 @@ export default async function Home() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // Use absolute URL
     const result = await fetch(`${baseUrl}/api/post/get`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ limit: 9, order: 'desc' }),
       cache: 'no-store',
     });
@@ -38,6 +41,12 @@ export default async function Home() {
           className='text-xs sm:text-sm text-teal-500 font-bold hover:underline'
         >
           View all posts
+        </Link>
+        <Link
+          href='/dashboard/create-post'
+          className='text-xs sm:text-sm text-teal-500 font-bold hover:underline'
+        >
+          Create post
         </Link>
       </div>
       <div className='p-3 bg-amber-100 dark:bg-slate-700'>

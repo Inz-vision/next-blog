@@ -71,9 +71,15 @@ export default function CreatePostPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'; // Use absolute URL
-      const res = await fetch(`${baseUrl}/api/post/create`, {            
+
+    if (!formData.title || !formData.content || !formData.category || !formData.image) {
+      setPublishError('Please fill in all required fields');
+      return;
+    }
+
+    try {      
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+      const res = await fetch(`${baseUrl}/api/post/create`, {       
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,15 +90,21 @@ export default function CreatePostPage() {
         }),
       });
       const data = await res.json();
+      console.log('API Response:', data); // Debugging log
       if (!res.ok) {
-        setPublishError(data.message);
+        console.error('Error creating post:', data);
+        setPublishError(data.error || 'Failed to create post');
         return;
       }
-      if (res.ok) {
-        setPublishError(null);
-        router.push(`/post/${data.slug}`);
+      if (!data.slug) {
+        setPublishError('Post created, but no slug returned');
+        return;
       }
+      setPublishError(null);
+      console.log('Redirecting to:', `/post/${data.slug}`);
+      router.push(`/post/${data.slug}`);
     } catch (error) {
+      console.error('Error creating post:', error);
       setPublishError('Something went wrong');
     }
   };
@@ -101,7 +113,7 @@ export default function CreatePostPage() {
     return null;
   }
 
-  if (isSignedIn && user.publicMetadata.isAdmin) {
+  if (isSignedIn && user?.publicMetadata?.isAdmin) {
     return (
       <div className='p-3 max-w-3xl mx-auto min-h-screen'>
         <h1 className='text-center text-3xl my-7 font-semibold'>
