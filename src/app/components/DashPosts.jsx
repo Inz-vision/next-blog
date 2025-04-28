@@ -51,8 +51,7 @@ export default function DashPosts() {
       const res = await fetch(`${baseUrl}/api/post/delete`, {           
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json', 
-          Authorization: `Bearer ${user?.sessionId}`,              
+          'Content-Type': 'application/json',                      
         },
         body: JSON.stringify({
           postId: postIdToDelete,
@@ -61,7 +60,7 @@ export default function DashPosts() {
       });
       const data = await res.json();
       if (res.ok) {
-        const newPosts = userPosts?.filter(
+        const newPosts = userPosts.filter(
           (post) => post._id !== postIdToDelete
         );
         setUserPosts(newPosts);
@@ -85,7 +84,7 @@ export default function DashPosts() {
 
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {user?.publicMetadata?.isAdmin && userPosts?.length > 0 ? (
+      {user?.publicMetadata?.isAdmin && userPosts.length > 0 ? (
         <>
           <Table hoverable className='shadow-md'>
             <Table.Head>
